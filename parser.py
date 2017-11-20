@@ -13,21 +13,16 @@ def get_domains():
 
 
 def get_data(post):
-    try:
-        group_id = post['owner_id']
-    except:
-        group_id = '0'
-
-    try:
-        link = "https://vk.com/wall" + str(post['owner_id']) \
-               + '_' + str(post['id'])
-    except:
-        link = '0'
 
     try:
         url = post['attachments'][0]['photo']['photo_604']
     except:
-        url = '0'
+        url = '1'
+
+    try:
+        text = post['text']
+    except:
+        text = ''
 
     try:
         likes = post['likes']['count']
@@ -45,20 +40,20 @@ def get_data(post):
         date = 0
 
     data = {
-        'group_id': group_id,
-        'link': link,
-        'url': url,
-        'likes': likes,
-        'reposts': reposts,
-        'date': date,
-        'value': likes / (time.time() - date)
+        'image_src': url,
+        'description': text,
+        'added_at': date,
+        'likes_count': likes,
+        'reposts_count': reposts,
+        'factor': likes / (time.time() - date),
+        'mode_id': 2
     }
 
     return data
 
 
 def pandasql(data):
-    frame = pd.DataFrame(data, columns=['group_id', 'link', 'url', 'likes', 'reposts', 'date', 'value'])
+    frame = pd.DataFrame(data, columns=['image_src', 'description', 'added_at', 'likes_count', 'reposts_count', 'factor', 'mode_id'])
     engine = create_engine('postgresql://memking:rofl@localhost:5432/membattle')
 
     frame.to_sql("membattle", engine, if_exists='replace')
@@ -82,6 +77,7 @@ def main():
                 type_flag = data['attachments'][0]['type']
             except:
                 type_flag = '0'
+
             if ads_flag == 0 and type_flag == 'photo' and len(text_flag) < 30:
                 all_posts.append(get_data(data))
     pandasql(all_posts)
