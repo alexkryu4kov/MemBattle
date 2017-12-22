@@ -3,6 +3,7 @@ import json
 import pandas as pd
 from sqlalchemy import create_engine
 import time
+import datetime
 
 
 def get_domains():
@@ -13,7 +14,6 @@ def get_domains():
 
 
 def get_data(post):
-
     try:
         url = post['attachments'][0]['photo']['photo_604']
     except:
@@ -36,13 +36,15 @@ def get_data(post):
 
     try:
         date = post['date']
+        tdate = datetime.datetime.fromtimestamp(date)
     except:
         date = 0
+        tdate = 0
 
     data = {
         'image_src': url,
         'description': text,
-        'added_at': date,
+        'added_at': tdate,
         'likes_count': likes,
         'reposts_count': reposts,
         'factor': likes / (time.time() - date),
@@ -53,10 +55,12 @@ def get_data(post):
 
 
 def pandasql(data):
-    frame = pd.DataFrame(data, columns=['image_src', 'description', 'added_at', 'likes_count', 'reposts_count', 'factor', 'mode_id'])
-    engine = create_engine('postgresql://memking:rofl@localhost:5432/membattle')
+    frame = pd.DataFrame(data,
+                         columns=['image_src', 'description', 'added_at', 'likes_count', 'reposts_count', 'factor',
+                                  'mode_id'])
+    engine = create_engine('postgresql://memes:memes@localhost:5432/memes')
 
-    frame.to_sql("membattle", engine, if_exists='replace')
+    frame.to_sql("meme_storage", engine, if_exists='append', index=False)
 
 
 def main():
