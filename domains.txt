@@ -10,3 +10,5 @@ abstract_memes
 memory_memes
 huli_rjesh
 mudakoff
+int_universe
+bot_maxim
