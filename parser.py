@@ -49,7 +49,7 @@ def get_data(post):
         'likes_count': likes,
         'reposts_count': reposts,
         'factor': likes / (time.time() - date),
-        'mode_id': 2
+        'mode_id': 1
     }
 
     return data
@@ -59,7 +59,7 @@ def pandasql(data):
     frame = pd.DataFrame(data,
                          columns=['image_src', 'description', 'added_at', 'likes_count', 'reposts_count', 'factor',
                                   'mode_id'])
-    engine = create_engine('postgresql://memes:memes@localhost:5432/memes')
+    engine = create_engine('postgresql://postgres:@localhost:5432/membattle')
 
     frame.to_sql("meme_storage", engine, if_exists='append', index=False)
 
