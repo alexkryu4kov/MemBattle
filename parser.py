@@ -4,6 +4,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 import time
 import datetime
+import operator
 
 
 def get_domains():
@@ -84,7 +85,8 @@ def main():
 
             if ads_flag == 0 and type_flag == 'photo' and len(text_flag) < 30:
                 all_posts.append(get_data(data))
-    pandasql(all_posts)
+    sorted_posts = sorted(all_posts, key=operator.itemgetter('factor'), reverse=True)
+    pandasql(sorted_posts)
 
 
 if __name__ == "__main__":
