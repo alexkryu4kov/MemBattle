@@ -70,7 +70,7 @@ def main():
     for elem in domains:
         r = requests.get('https://api.vk.com/method/wall.get',
                          params={'type': 'post', 'domain': elem, 'count': 100, 'offset': 1, 'v': 5.68,
-                                 'access_token': "e6b967bce6b967bce6b967bc57e6e59d60ee6b9e6b967bcbf56031045e35bc30ab16dd9"})
+                                 'access_token': "REDACTED"})
 
         for post in range(100):
             data = r.json()['response']['items'][post]
